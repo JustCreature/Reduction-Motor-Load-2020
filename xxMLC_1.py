@@ -34,6 +34,9 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     self.ui.setupUi(self)
     # event for button "Расчет"
     self.ui.btn_count.clicked.connect(self.count_main)
+    self.disable_btn_set_colib()
+    self.ui.comboBox_5.currentIndexChanged.connect(self.disable_btn_set_colib)
+
 
   def closeEvent(self, e):
     """This method require an affirmation on close event"""
@@ -45,6 +48,16 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       e.accept()
     else:
       e.ignore()
+
+  # if combobox set_colib is changed
+  def disable_btn_set_colib(self):
+    q = str(self.ui.comboBox_5.currentText())
+    if q != 'Штатная':
+      self.ui.btn_set_colib.setEnabled(True)
+      self.ui.btn_count.setEnabled(False)
+    else:
+      self.ui.btn_set_colib.setEnabled(False)
+      self.ui.btn_count.setEnabled(True)
 
   # btn_count click function
   def count_main(self):
