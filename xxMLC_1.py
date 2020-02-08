@@ -79,6 +79,27 @@ class Chose_dict_1(QtWidgets.QDialog):
     self.ui.setupUi(self)
 
 
+class add_new_steel(QtWidgets.QDialog):
+  def __init__(self, parent, steel_obj):
+    super().__init__(parent=None)
+    self.steel_obj = steel_obj
+    self.ui = UD()
+    self.ui.setupUi(self)
+    self.ui.bt_OK.clicked.connect(self.acceptd)
+    self.ui.bt_STOP.clicked.connect(self.close)
+
+  def acceptd(self):
+    print(self.ui.sig_in_2.text())
+    new_st_name = self.ui.sig_in_2.text()
+    new_st_sig = self.ui.sig_in.text()
+    new_st_a = self.ui.a_in.text()
+    new_st_b = self.ui.b_in.text()
+    new_st_c = self.ui.c_in.text()
+    self.steel_obj.ad_st_in_ob(new_st_name, new_st_sig, new_st_a, new_st_b, new_st_c)
+    self.close()
+    print(self.steel_obj.obj_steels)
+
+
 class DynamicGraph(FigureCanvas):
   def __init__(self, parent=None, PC1=0, PC2=0):
     fig = Figure()
