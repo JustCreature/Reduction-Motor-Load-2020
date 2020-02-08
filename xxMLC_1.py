@@ -26,6 +26,20 @@ import pathlib
 import subprocess
 from math_model import Model_MLC
 
+# Excel REPORT
+def for_get_ex():
+  wb = xlwt.Workbook()
+  sh = wb.add_sheet('test')
+  sh.write(0,0,111)
+  wb.save('output.xls')
+
+
+class Chose_dict_1(QtWidgets.QDialog):
+  def __init__(self, parent=None):
+    super(Chose_dict_1, self).__init__(parent)
+    self.ui = Ui_Dialog()
+    self.ui.setupUi(self)
+
 
 class Prog_comp_1(QtWidgets.QMainWindow):
   # Dict with all parameters
