@@ -27,6 +27,55 @@ import subprocess
 from math_model import Model_MLC
 
 
+class DynamicGraph(FigureCanvas):
+  def __init__(self, parent=None, PC1=0, PC2=0):
+    fig = Figure()
+    self.axes = fig.add_subplot(111)
+    self.PC1 = PC1
+    self.PC2 = PC2
+
+    self.compute_initial_figure(self.PC1, self.PC2)
+
+    FigureCanvas.__init__(self, fig)
+    self.setParent(parent)
+
+    FigureCanvas.setSizePolicy(self,
+                               QtWidgets.QSizePolicy.Expanding,
+                               QtWidgets.QSizePolicy.Expanding)
+    FigureCanvas.updateGeometry(self)
+
+  def compute_initial_figure(self, pc1, pc2):
+    if pc1 != 0 and pc2 != 0:
+      p1 = pc1 * 1000
+      p2 = pc2 * 1000
+      t = p1
+      y = 20
+      u = 100
+      data = (0, p1 - 800, p1, t + random.randint(y, u), t - random.randint(y, u),
+              t + random.randint(y, u), t - random.randint(y, u), t + random.randint(y, u),
+              t - random.randint(y, u), t + random.randint(y, u), t - random.randint(y, u),
+              t + random.randint(y, u), t - random.randint(y, u), t + random.randint(y, u),
+              t - random.randint(y, u), 60, 0)
+      t = p2
+      data1 = (0, 30, p2, t + random.randint(y, u), t - random.randint(y, u),
+               t + random.randint(y, u), t - random.randint(y, u), t + random.randint(y, u),
+               t - random.randint(y, u), t + random.randint(y, u), t - random.randint(y, u),
+               t + random.randint(y, u), t - random.randint(y, u), t + random.randint(y, u),
+               t - random.randint(y, u), 60, 0)
+      # fig, self.axes = plt.subplots()
+      bins = (0, 0.4, 0.8, 1.2, 2.5, 3.9, 6.5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
+      bins1 = (0, 0.5, 1.3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
+      self.axes.plot(bins, data, bins1, data1, label=('x', 'y'))
+      self.axes.legend(loc=('upper left'))
+
+  def update_figure(self, pc1, pc2):
+    self.axes.cla()
+    self.compute_initial_figure(pc1, pc2)
+    self.draw()
+
+
+
+
 class Prog_comp_1(QtWidgets.QMainWindow):
   def __init__(self):
     super().__init__()
