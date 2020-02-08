@@ -100,6 +100,64 @@ class add_new_steel(QtWidgets.QDialog):
     print(self.steel_obj.obj_steels)
 
 
+class steel_set(QtWidgets.QDialog):
+  def __init__(self, parent, steel_obj):
+    super().__init__(parent=None)
+    self.ui = SteelSet()
+    self.ui.setupUi(self)
+    self.steel_obj = steel_obj
+    self.ui.set_cancel.clicked.connect(self.close)
+    self.ui.clear_list.clicked.connect(self.clear)
+    self.ui.load_list.clicked.connect(self.add_list)
+    self.ui.export_list.clicked.connect(self.exp_list)
+
+  def exp_list(self):
+    try:
+      options = QtWidgets.QFileDialog.Options()
+      self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Сохранить в...", "default_steel_list",
+                                                               "BBLD (*.bbld)", options=options)
+      if self.fileName:
+        self.writeFile = open(self.fileName, 'w', encoding='utf-8')
+        self.writeFile.write(str(self.steel_obj.obj_steels))
+        self.writeFile.close()
+        self.close()
+    except FileNotFoundError:
+      pass
+
+  def add_list(self):
+    options = QtWidgets.QFileDialog.Options()
+    self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Загрузить стали из...", "",
+                                                             "BBLD (*.bbld)", options=options)
+    if self.fileName:
+      format = str(self.fileName).split(".")
+      if "bbld" in format or "" in format:
+        self.openFile = open(self.fileName, 'r', encoding='utf-8')
+        self.readFile = self.openFile.read()
+        self.steel_obj.set_st_list(self.readFile)
+        self.openFile.close()
+        self.close()
+      else:
+        QtWidgets.QMessageBox.warning(self, "Ошибка", "Неверный формат файла",
+                                      QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+        pass
+
+  def clear(self):
+    res = QtWidgets.QMessageBox.question(self, "Подтвердить удаление?",
+                                         "Вы действительно хотите удалить все, вручную введенные, стали?\n"
+                                         "(Данное действие необратимо!)", QtWidgets.QMessageBox.Yes |
+                                         QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+    if res == QtWidgets.QMessageBox.Yes:
+      subprocess.call(['attrib', '-h', st_file_format])
+      f = open(st_file_format, "w+")
+      f.write("")
+      f.close()
+      subprocess.call(['attrib', '+h', st_file_format])
+      self.steel_obj.obj_steels.clear()
+      QtWidgets.QMessageBox.information(self, "Сообщение", "Все вручную введенные стали были удалены!",
+                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+      self.close()
+
+
 class DynamicGraph(FigureCanvas):
   def __init__(self, parent=None, PC1=0, PC2=0):
     fig = Figure()
