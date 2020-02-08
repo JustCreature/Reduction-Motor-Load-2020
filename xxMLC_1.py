@@ -112,6 +112,13 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     else:
       e.ignore()
 
+  def openDialog(self):
+    dialog = Chose_dict_1(self)
+    dialog.exec_()
+
+  def get_ex(self):
+    for_get_ex()
+
   # if combobox set_colib is changed
   def disable_btn_set_colib(self):
     q = str(self.ui.comboBox_5.currentText())
