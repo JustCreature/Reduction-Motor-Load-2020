@@ -26,6 +26,44 @@ import pathlib
 import subprocess
 from math_model import Model_MLC
 
+# The name of the file that retains the manual steel list when the app is turned of
+st_file_format = "st_log.bbld"
+
+
+class SteelList:
+  def __init__(self):
+    self.__obj_steels = {}
+    self.__obj_steels_default = Model_MLC.obj_steels_default
+    self.__checkLog()
+
+  def __checkLog(self):
+    file = pathlib.Path(st_file_format)
+    if file.exists():
+      subprocess.call(['attrib', '-h', st_file_format])
+      f = open(st_file_format, "r")
+      d = str(f.read())
+      try:
+        self.__obj_steels = eval(d)
+      except SyntaxError:
+        pass
+      f.close()
+      subprocess.call(['attrib', '+h', st_file_format])
+
+  def ad_st_in_ob(self, st_name, st_sig, st_a, st_b, st_c):
+    self.__obj_steels[str(st_name)] = [float(st_sig), float(st_a), float(st_b), float(st_c)]
+
+  def set_st_list(self, x):
+    b = eval(x)
+    for i in b:
+      self.__obj_steels[i] = [b[i][0], b[i][1], b[i][2], b[i][3]]
+
+  def get_obj_steels(self):
+    return self.__obj_steels
+
+  def get_obj_steels_default(self):
+    return self.__obj_steels_default
+
+
 # Excel REPORT
 def for_get_ex():
   wb = xlwt.Workbook()
