@@ -63,11 +63,19 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       print("q")
       # use math_model to get required values PC_1 and PC_2
       arr_out_math = Model_MLC.math_model(f_D1, f_Doh, f_T, f_beta, f_Dvp, f_nd, key)
+
+      # count length of forged billet
+      bil_len = float(self.ui.spinBox.text())
+      mu = (math.pi * float(f_D1) ** 2) / (math.pi * float(f_Doh) ** 2)
+      print(f"Mu = {mu}")
+      forged_bil_len = bil_len * mu
+
       if arr_out_math[0] != 1111:
         # 1111 is appended to the array in case of an error
         # the next value in array (index = 1) is the error message
         self.ui.get_PC1.setText(str(arr_out_math[0]))
         self.ui.get_PC2.setText(str(arr_out_math[1]))
+        self.ui.get_forged_len.setText(str(forged_bil_len))
       else:
         # error message in case of an error
         QtWidgets.QMessageBox.warning(self, "Ошибка", arr_out_math[1],
@@ -86,11 +94,19 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       # use math_model to get required values PC_1 and PC_2
       arr_out_math = Model_MLC.math_model(f_D1, f_Doh, f_T, f_beta, f_Dvp, f_nd,
                                           key, self.steels.get_obj_steels())
+
+      # count length of forged billet
+      bil_len = float(self.ui.spinBox.text())
+      mu = (math.pi * float(f_D1) ** 2) / (math.pi * float(f_Doh) ** 2)
+      print(f"Mu = {mu}")
+      forged_bil_len = bil_len * mu
+
       if arr_out_math[0] != 1111:
         # 1111 is appended to the array in case of an error
         # the next value in array (index = 1) is the error message
         self.ui.get_PC1.setText(str(arr_out_math[0]))
         self.ui.get_PC2.setText(str(arr_out_math[1]))
+        self.ui.get_forged_len.setText(str(forged_bil_len))
       else:
         # error message in case of an error
         QtWidgets.QMessageBox.warning(self, "Ошибка", arr_out_math[1],
