@@ -25,3 +25,41 @@ import random
 import pathlib
 import subprocess
 from math_model import Model_MLC
+
+
+class Prog_comp_1(QtWidgets.QMainWindow):
+  def __init__(self):
+    super().__init__()
+    self.ui = Ui_MainWindow()
+    self.ui.setupUi(self)
+
+  def closeEvent(self, e):
+    """This method require an affirmation on close event"""
+    res = QtWidgets.QMessageBox.question(self, "Подтвердить выход?",
+                                         "Вы действительно хотите закрыть программу?\n"
+                                         "(Все несохраненные данные будут потеряны!)", QtWidgets.QMessageBox.Yes |
+                                         QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+    if res == QtWidgets.QMessageBox.Yes:
+      e.accept()
+    else:
+      e.ignore()
+
+
+def main():
+  app = QtWidgets.QApplication(sys.argv)
+  window = Prog_comp_1()
+  window.show()
+  app.exec_()
+
+if __name__ == '__main__':
+  main()
+
+
+
+
+
+
+
+
+
+
