@@ -84,6 +84,18 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     # event for button "Расчет"
     self.ui.btn_count.clicked.connect(self.count_main)
 
+    ###################################################
+    # the following code is used to show the FREAKING graph!!!
+    self.P1f = DynamicGraph(self)
+    self.stack = QtWidgets.QStackedWidget(self)
+    self.stack.addWidget(self.P1f)
+    lay = QtWidgets.QVBoxLayout(self.ui.listWidget)
+    lay.setContentsMargins(0, 0, 0, 0)
+    lay.addWidget(self.stack)
+    self.toolbar = NavigationToolbar(self.P1f, self)
+    lay.addWidget(self.toolbar)
+    #########################################
+
   def closeEvent(self, e):
     """This method require an affirmation on close event"""
     res = QtWidgets.QMessageBox.question(self, "Подтвердить выход?",
@@ -145,6 +157,7 @@ class Prog_comp_1(QtWidgets.QMainWindow):
         self.ui.get_PC1.setText(str(arr_out_math[0]))
         self.ui.get_PC2.setText(str(arr_out_math[1]))
         self.ui.get_forged_len.setText(str(forged_bil_len))
+        self.P1f.update_figure(arr_out_math[0], arr_out_math[1])
       else:
         # error message in case of an error
         QtWidgets.QMessageBox.warning(self, "Ошибка", arr_out_math[1],
@@ -196,6 +209,7 @@ class Prog_comp_1(QtWidgets.QMainWindow):
         self.ui.get_PC1.setText(str(arr_out_math[0]))
         self.ui.get_PC2.setText(str(arr_out_math[1]))
         self.ui.get_forged_len.setText(str(forged_bil_len))
+        self.P1f.update_figure(arr_out_math[0], arr_out_math[1])
       else:
         # error message in case of an error
         QtWidgets.QMessageBox.warning(self, "Ошибка", arr_out_math[1],
