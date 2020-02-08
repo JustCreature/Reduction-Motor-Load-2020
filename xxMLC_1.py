@@ -71,6 +71,26 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       forged_bil_len = bil_len * mu
 
       if arr_out_math[0] != 1111:
+        if arr_out_math[0] >= 3.52:
+          # if the value of PC1 is greater than allowed
+          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 0, 0); '
+                                        'color: rgb(255, 255, 255);')
+          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
+                                                             "допустимой токовой нагрузки PC №1!",
+                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+        else:
+          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 255, 255); '
+                                        'color: rgb(0, 0, 0);')
+        if arr_out_math[1] >= 3.84:
+          # if the value of PC2 is greater than allowed
+          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 0, 0); '
+                                        'color: rgb(255, 255, 255);')
+          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
+                                                             "допустимой токовой нагрузки PC №2!",
+                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+        else:
+          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 255, 255); '
+                                        'color: rgb(0, 0, 0);')
         # 1111 is appended to the array in case of an error
         # the next value in array (index = 1) is the error message
         self.ui.get_PC1.setText(str(arr_out_math[0]))
@@ -102,6 +122,26 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       forged_bil_len = bil_len * mu
 
       if arr_out_math[0] != 1111:
+        if arr_out_math[0] >= 3.52:
+          # if the value of PC1 is greater than allowed
+          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 0, 0); '
+                                        'color: rgb(255, 255, 255);')
+          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
+                                                             "допустимой токовой нагрузки PC №1!",
+                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+        else:
+          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 255, 255); '
+                                        'color: rgb(0, 0, 0);')
+        if arr_out_math[1] >= 3.84:
+          # if the value of PC2 is greater than allowed
+          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 0, 0); '
+                                        'color: rgb(255, 255, 255);')
+          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
+                                                             "допустимой токовой нагрузки PC №2!",
+                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+        else:
+          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 255, 255); '
+                                        'color: rgb(0, 0, 0);')
         # 1111 is appended to the array in case of an error
         # the next value in array (index = 1) is the error message
         self.ui.get_PC1.setText(str(arr_out_math[0]))
