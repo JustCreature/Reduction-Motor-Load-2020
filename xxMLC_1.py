@@ -51,11 +51,10 @@ class DynamicGraph(FigureCanvas):
       t = p1
       y = 20
       u = 100
-      data = (0, p1 - 800, p1, t + random.randint(y, u), t - random.randint(y, u),
-              t + random.randint(y, u), t - random.randint(y, u), t + random.randint(y, u),
-              t - random.randint(y, u), t + random.randint(y, u), t - random.randint(y, u),
-              t + random.randint(y, u), t - random.randint(y, u), t + random.randint(y, u),
-              t - random.randint(y, u), 60, 0)
+      data = 0
+      for i in data:
+        while i < 1500:
+          data = pq * t * random.randint(2, 40)
       t = p2
       data1 = (0, 30, p2, t + random.randint(y, u), t - random.randint(y, u),
                t + random.randint(y, u), t - random.randint(y, u), t + random.randint(y, u),
