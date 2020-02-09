@@ -261,6 +261,7 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     super().__init__()
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
+    self.steels = SteelList()
     self.turned_on()
     self.refresh()
     # event for button "Расчет"
@@ -268,6 +269,12 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     self.disable_btn_set_colib()
     self.ui.comboBox_5.currentIndexChanged.connect(self.disable_btn_set_colib)
     self.ui.comboBox_4.currentIndexChanged.connect(self.disable_discard_steel_btn)
+    self.disable_discard_steel_btn()
+    self.ui.btn_get_pdf.clicked.connect(self.openDialog)
+    self.ui.btn_get_excel.clicked.connect(self.get_ex)
+    self.ui.add_steel.clicked.connect(self.ad_st)
+    self.ui.discard_steel.clicked.connect(self.remove_st)
+    self.ui.btn_refresh.clicked.connect(self.set_st)
 
 
     ###################################################
@@ -334,6 +341,29 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     f.close()
     subprocess.call(['attrib', '+h', st_file_format])
 
+  def set_st(self):
+    dialog_set_st = steel_set(self, self.steels)
+    dialog_set_st.exec_()
+    self.refresh()
+
+  def ad_st(self):
+    dialog_ad_st = add_new_steel(self, self.steels)
+    dialog_ad_st.exec_()
+    self.refresh()
+
+  def remove_st(self):
+    item = str(self.ui.comboBox_4.currentText())
+    if item in self.steels.get_obj_steels():
+      self.steels.get_obj_steels().pop(item)
+      self.refresh()
+
+  def disable_discard_steel_btn(self):
+    item = str(self.ui.comboBox_4.currentText())
+    if item in self.steels.get_obj_steels():
+      self.ui.discard_steel.setEnabled(True)
+    else:
+      self.ui.discard_steel.setEnabled(False)
+
   def openDialog(self):
     dialog = Chose_dict_1(self)
     dialog.exec_()
@@ -350,6 +380,9 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     else:
       self.ui.btn_set_colib.setEnabled(False)
       self.ui.btn_count.setEnabled(True)
+
+  def get_calka(self):
+    self.ui.btn_count.setEnabled(True)
 
   # btn_count click function
   def count_main(self):
