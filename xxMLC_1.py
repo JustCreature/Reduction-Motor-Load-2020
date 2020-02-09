@@ -31,12 +31,16 @@ st_file_format = "st_log.bbld"
 
 
 class SteelList:
+  """SteelList is the class that creates the object of all manually inputed steel grades"""
   def __init__(self):
     self.__obj_steels = {}
     self.__obj_steels_default = Model_MLC.obj_steels_default
     self.__checkLog()
 
   def __checkLog(self):
+    """The method that checks weather manually inputted steels exist
+    (if the file which stores them does exist) and if they do puts them in the dict
+    (this method is called by the constructor)"""
     file = pathlib.Path(st_file_format)
     if file.exists():
       subprocess.call(['attrib', '-h', st_file_format])
@@ -50,9 +54,11 @@ class SteelList:
       subprocess.call(['attrib', '+h', st_file_format])
 
   def ad_st_in_ob(self, st_name, st_sig, st_a, st_b, st_c):
+    """This method adds new steel grade to the dict"""
     self.__obj_steels[str(st_name)] = [float(st_sig), float(st_a), float(st_b), float(st_c)]
 
   def set_st_list(self, x):
+    """This method imports the list of steel grades from outer file"""
     b = eval(x)
     for i in b:
       self.__obj_steels[i] = [b[i][0], b[i][1], b[i][2], b[i][3]]
@@ -61,9 +67,11 @@ class SteelList:
     self.__obj_steels.clear()
 
   def get_obj_steels(self):
+    """This method returns the list of inputted manually steel grades"""
     return self.__obj_steels
 
   def get_obj_steels_default(self):
+    """This method returns the list of default steel grades"""
     return self.__obj_steels_default
 
 
@@ -83,7 +91,10 @@ class Chose_dict_1(QtWidgets.QDialog):
 
 
 class add_new_steel(QtWidgets.QDialog):
+  """This class is a dialog window that is used to input new steel grade"""
   def __init__(self, parent, steel_obj):
+    """This is the constructor that gets 1 argument which is
+    the list of steel grades of SteelList instance"""
     super().__init__(parent=None)
     self.steel_obj = steel_obj
     self.ui = UD()
@@ -92,6 +103,7 @@ class add_new_steel(QtWidgets.QDialog):
     self.ui.bt_STOP.clicked.connect(self.close)
 
   def acceptd(self):
+    """The method that is used when Ok button is pressed"""
     print(self.ui.sig_in_2.text())
     new_st_name = self.ui.sig_in_2.text()
     new_st_sig = self.ui.sig_in.text()
@@ -104,6 +116,7 @@ class add_new_steel(QtWidgets.QDialog):
 
 
 class steel_set(QtWidgets.QDialog):
+  """This class is a dialog window that is used to customise the list of steel grades"""
   def __init__(self, parent, steel_obj):
     super().__init__(parent=None)
     self.ui = SteelSet()
@@ -115,6 +128,7 @@ class steel_set(QtWidgets.QDialog):
     self.ui.export_list.clicked.connect(self.exp_list)
 
   def exp_list(self):
+    """The method allows to export the list of steel grades to outer file"""
     try:
       options = QtWidgets.QFileDialog.Options()
       self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Сохранить в...", "default_steel_list",
@@ -128,6 +142,7 @@ class steel_set(QtWidgets.QDialog):
       pass
 
   def add_list(self):
+    """The method allows to choose the outer file to import the list of steel grades"""
     options = QtWidgets.QFileDialog.Options()
     self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Загрузить стали из...", "",
                                                              "BBLD (*.bbld)", options=options)
@@ -145,6 +160,7 @@ class steel_set(QtWidgets.QDialog):
         pass
 
   def clear(self):
+    """The method allows to clear the list of steel grades"""
     res = QtWidgets.QMessageBox.question(self, "Подтвердить удаление?",
                                          "Вы действительно хотите удалить все, вручную введенные, стали?\n"
                                          "(Данное действие необратимо!)", QtWidgets.QMessageBox.Yes |
@@ -162,6 +178,8 @@ class steel_set(QtWidgets.QDialog):
 
 
 class DynamicGraph(FigureCanvas):
+  """A canvas that updates itself when the button 'Расчет'(Count) is pressed with a new plot."""
+
   def __init__(self, parent=None, PC1=0, PC2=0):
     fig = Figure()
     self.axes = fig.add_subplot(111)
@@ -217,9 +235,11 @@ class DynamicGraph(FigureCanvas):
 
 
 class Prog_comp_1(QtWidgets.QMainWindow):
+  """This class represents the main window"""
   # Dict with all parameters
   @staticmethod
   def get_colib_from_ex_2():
+    """This method allows to get the colib data from outer .xlsx file"""
     calka = {}
     wb = xlrd.open_workbook('for_Dict_2.xlsx')
     sh = wb.sheet_by_index(0)
@@ -267,6 +287,7 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     return calka
 
   def __init__(self):
+    """This is a constructor (it dose NOT get any arguments)"""
     super().__init__()
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
@@ -311,6 +332,7 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     #########################################
 
   def closeEvent(self, e):
+    """This method require an affirmation on close event"""
     res = QtWidgets.QMessageBox.question(self, "Подтвердить выход?",
                                          "Вы действительно хотите закрыть программу?\n"
                                          "(Все несохраненные данные будут потеряны!)", QtWidgets.QMessageBox.Yes |
@@ -321,6 +343,7 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       e.ignore()
 
   def turned_on(self):
+    """This is a refreshment when the program is turned on"""
     self.ui.comboBox_4.clear()
     arr_default = []
     arr_manual = []
@@ -339,6 +362,7 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       i += 1
 
   def refresh(self):
+    """This is a refreshment when something is changed"""
     self.ui.comboBox_4.clear()
     arr_default = []
     arr_manual = []
@@ -362,22 +386,26 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     subprocess.call(['attrib', '+h', st_file_format])
 
   def set_st(self):
+    """This method allows to customise the list of steel grades"""
     dialog_set_st = steel_set(self, self.steels)
     dialog_set_st.exec_()
     self.refresh()
 
   def ad_st(self):
+    """This method allows to add a new steel to the list of steel grades"""
     dialog_ad_st = add_new_steel(self, self.steels)
     dialog_ad_st.exec_()
     self.refresh()
 
   def remove_st(self):
+    """This method allows to remove manually inputted steel from the list of steel grades"""
     item = str(self.ui.comboBox_4.currentText())
     if item in self.steels.get_obj_steels():
       self.steels.get_obj_steels().pop(item)
       self.refresh()
 
   def disable_discard_steel_btn(self):
+    """This method disables the remove button if chosen steel grade is not inputted manually"""
     item = str(self.ui.comboBox_4.currentText())
     if item in self.steels.get_obj_steels():
       self.ui.discard_steel.setEnabled(True)
@@ -393,6 +421,8 @@ class Prog_comp_1(QtWidgets.QMainWindow):
 
   # if combobox set_colib is changed
   def disable_btn_set_colib(self):
+    """This method disables 'Расчет'(Count) button if chosen colib is not
+    'Штатная'(Default) until the colib is not set by clicking 'Задать калибровку'(Set colib)"""
     q = str(self.ui.comboBox_5.currentText())
     if q != 'Штатная':
       self.ui.btn_set_colib.setEnabled(True)
@@ -402,10 +432,12 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       self.ui.btn_count.setEnabled(True)
 
   def get_calka(self):
+    """This method enables 'Расчет'(Count) button if colib is set"""
     self.ui.btn_count.setEnabled(True)
 
   # btn_count click function
   def count_main(self):
+    """This method is used when 'Расчет'(Count) button is pressed"""
     # count for "Штатная" colib_set
     q = str(self.ui.comboBox_5.currentText())
     if q == 'Штатная':
