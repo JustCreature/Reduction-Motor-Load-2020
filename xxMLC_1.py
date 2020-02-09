@@ -207,7 +207,13 @@ class DynamicGraph(FigureCanvas):
     self.compute_initial_figure(pc1, pc2)
     self.draw()
 
+###################################################################
 
+
+###################################################################
+
+
+""" MAIN WINDOW """
 
 
 class Prog_comp_1(QtWidgets.QMainWindow):
@@ -267,9 +273,13 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     self.steels = SteelList()
     self.turned_on()
     self.refresh()
+    # disable btn_set_colib
+    self.disable_btn_set_colib()
+    # on click get_calka
+    self.ui.btn_set_colib.clicked.connect(self.get_calka)
     # event for button "Расчет"
     self.ui.btn_count.clicked.connect(self.count_main)
-    self.disable_btn_set_colib()
+    # event if combobox set_colib is changed
     self.ui.comboBox_5.currentIndexChanged.connect(self.disable_btn_set_colib)
     self.ui.comboBox_4.currentIndexChanged.connect(self.disable_discard_steel_btn)
     self.disable_discard_steel_btn()
@@ -279,6 +289,14 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     self.ui.discard_steel.clicked.connect(self.remove_st)
     self.ui.btn_refresh.clicked.connect(self.set_st)
 
+    #########################################
+    # The testing section (change it when the app is ready!!!!!)
+    self.ui.comboBox_5.setDisabled(True)
+    self.ui.btn_get_excel.setDisabled(True)
+    self.ui.btn_get_pdf.setDisabled(True)
+    self.ui.label_17.setText("<html><head/><img src='Лого РосНИТИ рус.png' width=71 height=91/></html>")
+    self.ui.label_18.setText("<html><head/><img src='vtz_logo — копия.jpg' width=71 height=91/></html>")
+    #########################################
 
     ###################################################
     # the following code is used to show the FREAKING graph!!!
@@ -293,7 +311,6 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     #########################################
 
   def closeEvent(self, e):
-    """This method require an affirmation on close event"""
     res = QtWidgets.QMessageBox.question(self, "Подтвердить выход?",
                                          "Вы действительно хотите закрыть программу?\n"
                                          "(Все несохраненные данные будут потеряны!)", QtWidgets.QMessageBox.Yes |
@@ -403,57 +420,6 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       key = str(self.ui.comboBox_4.currentText())
       print("q")
       # use math_model to get required values PC_1 and PC_2
-      arr_out_math = Model_MLC.math_model(f_D1, f_Doh, f_T, f_beta, f_Dvp, f_nd, key)
-
-      # count length of forged billet
-      bil_len = float(self.ui.spinBox.text())
-      mu = (math.pi * float(f_D1) ** 2) / (math.pi * float(f_Doh) ** 2)
-      print(f"Mu = {mu}")
-      forged_bil_len = bil_len * mu
-
-      if arr_out_math[0] != 1111:
-        if arr_out_math[0] >= 3.52:
-          # if the value of PC1 is greater than allowed
-          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 0, 0); '
-                                        'color: rgb(255, 255, 255);')
-          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
-                                                             "допустимой токовой нагрузки PC №1!",
-                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
-        else:
-          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 255, 255); '
-                                        'color: rgb(0, 0, 0);')
-        if arr_out_math[1] >= 3.84:
-          # if the value of PC2 is greater than allowed
-          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 0, 0); '
-                                        'color: rgb(255, 255, 255);')
-          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
-                                                             "допустимой токовой нагрузки PC №2!",
-                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
-        else:
-          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 255, 255); '
-                                        'color: rgb(0, 0, 0);')
-        # 1111 is appended to the array in case of an error
-        # the next value in array (index = 1) is the error message
-        self.ui.get_PC1.setText(str(arr_out_math[0]))
-        self.ui.get_PC2.setText(str(arr_out_math[1]))
-        self.ui.get_forged_len.setText(str(forged_bil_len))
-        self.P1f.update_figure(arr_out_math[0], arr_out_math[1])
-      else:
-        # error message in case of an error
-        QtWidgets.QMessageBox.warning(self, "Ошибка", arr_out_math[1],
-                                      QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
-    else:
-      ## a = get_colib_from_ex_1()
-      # get values from interface
-      f_D1 = (self.ui.ent_D1.currentText())
-      f_Doh = self.ui.ent_Doh.currentText()
-      f_T = self.ui.ent_T.text()
-      f_beta = self.ui.ent_beta.currentText()
-      f_Dvp = self.ui.ent_Dvp.text()
-      f_nd = self.ui.ent_nd.text()
-      key = str(self.ui.comboBox_4.currentText())
-      print("q")
-      # use math_model to get required values PC_1 and PC_2
       arr_out_math = Model_MLC.math_model(f_D1, f_Doh, f_T, f_beta, f_Dvp, f_nd,
                                           key, self.steels.get_obj_steels())
 
@@ -463,7 +429,10 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       print(f"Mu = {mu}")
       forged_bil_len = bil_len * mu
 
+      # show required values in the interface
       if arr_out_math[0] != 1111:
+        # 1111 is appended to the array in case of an error
+        # the next value in array (index = 1) is the error message
         if arr_out_math[0] >= 3.52:
           # if the value of PC1 is greater than allowed
           self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 0, 0); '
@@ -484,8 +453,6 @@ class Prog_comp_1(QtWidgets.QMainWindow):
         else:
           self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 255, 255); '
                                         'color: rgb(0, 0, 0);')
-        # 1111 is appended to the array in case of an error
-        # the next value in array (index = 1) is the error message
         self.ui.get_PC1.setText(str(arr_out_math[0]))
         self.ui.get_PC2.setText(str(arr_out_math[1]))
         self.ui.get_forged_len.setText(str(forged_bil_len))
@@ -494,29 +461,72 @@ class Prog_comp_1(QtWidgets.QMainWindow):
         # error message in case of an error
         QtWidgets.QMessageBox.warning(self, "Ошибка", arr_out_math[1],
                                       QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+
+    # count for the other colib_set
+    else:
+      a = self.get_colib_from_ex_2()
+      # get values from interface
+      f_D1 = (self.ui.ent_D1.currentText())
+      f_Doh = self.ui.ent_Doh.currentText()
+      f_T = self.ui.ent_T.text()
+      f_beta = self.ui.ent_beta.currentText()
+      f_Dvp = self.ui.ent_Dvp.text()
+      f_nd = self.ui.ent_nd.text()
+      key = str(self.ui.comboBox_4.currentText())
+      # use math_model to get required values PC_1 and PC_2
+      arr_out_math = Model_MLC.math_model(f_D1, f_Doh, f_T, f_beta, f_Dvp, f_nd,
+                                          key, self.steels.get_obj_steels(), a)
+
+      # count length of forged billet
+      bil_len = float(self.ui.spinBox.text())
+      mu = (math.pi * float(f_D1) ** 2) / (math.pi * float(f_Doh) ** 2)
+      print(f"Mu = {mu}")
+      forged_bil_len = bil_len * mu
+
+      # show required values in the interface
+      if arr_out_math[0] != 1111:
+        # 1111 is appended to the array in case of an error
+        # the next value in array (index = 1) is the error message
+        if arr_out_math[0] >= 3.52:
+          # if the value of PC1 is greater than allowed
+          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 0, 0); '
+                                        'color: rgb(255, 255, 255);')
+          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
+                                                             "допустимой токовой нагрузки PC №1!",
+                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+        else:
+          self.ui.get_PC1.setStyleSheet('background-color: rgb(255, 255, 255); '
+                                        'color: rgb(0, 0, 0);')
+        if arr_out_math[1] >= 3.84:
+          # if the value of PC2 is greater than allowed
+          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 0, 0); '
+                                        'color: rgb(255, 255, 255);')
+          QtWidgets.QMessageBox.warning(self, "Внимание!!!", "Превышение максимально "
+                                                             "допустимой токовой нагрузки PC №2!",
+                                        QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+        else:
+          self.ui.get_PC2.setStyleSheet('background-color: rgb(255, 255, 255); '
+                                        'color: rgb(0, 0, 0);')
+        self.ui.get_PC1.setText(str(arr_out_math[0]))
+        self.ui.get_PC2.setText(str(arr_out_math[1]))
+        self.ui.get_forged_len.setText(str(forged_bil_len))
+        self.P1f.update_figure(arr_out_math[0], arr_out_math[1])
+      else:
+        # error message in case of an error
+        QtWidgets.QMessageBox.warning(self, "Ошибка", arr_out_math[1],
+                                      QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
+
       print('not yet')
-
-
-
-
-
 
 
 def main():
   app = QtWidgets.QApplication(sys.argv)
+  # app.setQuitOnLastWindowClosed(False)
   window = Prog_comp_1()
   window.show()
   app.exec_()
 
+
 if __name__ == '__main__':
   main()
-
-
-
-
-
-
-
-
-
 
