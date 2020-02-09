@@ -261,10 +261,13 @@ class Prog_comp_1(QtWidgets.QMainWindow):
     super().__init__()
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
+    self.turned_on()
+    self.refresh()
     # event for button "Расчет"
     self.ui.btn_count.clicked.connect(self.count_main)
     self.disable_btn_set_colib()
     self.ui.comboBox_5.currentIndexChanged.connect(self.disable_btn_set_colib)
+    self.ui.comboBox_4.currentIndexChanged.connect(self.disable_discard_steel_btn)
 
 
     ###################################################
@@ -289,6 +292,47 @@ class Prog_comp_1(QtWidgets.QMainWindow):
       e.accept()
     else:
       e.ignore()
+
+  def turned_on(self):
+    self.ui.comboBox_4.clear()
+    arr_default = []
+    arr_manual = []
+    for key in self.steels.get_obj_steels_default():
+      arr_default.append(key)
+    if self.steels.get_obj_steels():
+      for key in self.steels.get_obj_steels():
+        arr_manual.append(key)
+    i = 0
+    while i < len(arr_default):
+      self.ui.comboBox_4.addItem(arr_default[i])
+      i += 1
+    i = 0
+    while i < len(arr_manual):
+      self.ui.comboBox_4.addItem(arr_manual[i])
+      i += 1
+
+  def refresh(self):
+    self.ui.comboBox_4.clear()
+    arr_default = []
+    arr_manual = []
+    for key in self.steels.get_obj_steels_default():
+      arr_default.append(key)
+    for key in self.steels.get_obj_steels():
+      arr_manual.append(key)
+    i = 0
+    while i < len(arr_default):
+      self.ui.comboBox_4.addItem(arr_default[i])
+      i += 1
+    i = 0
+    while i < len(arr_manual):
+      self.ui.comboBox_4.addItem(arr_manual[i])
+      i += 1
+    subprocess.call(['attrib', '-h', st_file_format])
+    f = open(st_file_format, "w+")
+    f.write(str(self.steels.get_obj_steels()))
+    print(str(self.steels.get_obj_steels()))
+    f.close()
+    subprocess.call(['attrib', '+h', st_file_format])
 
   def openDialog(self):
     dialog = Chose_dict_1(self)
