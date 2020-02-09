@@ -57,6 +57,9 @@ class SteelList:
     for i in b:
       self.__obj_steels[i] = [b[i][0], b[i][1], b[i][2], b[i][3]]
 
+  def clear_steel_set(self):
+    self.__obj_steels.clear()
+
   def get_obj_steels(self):
     return self.__obj_steels
 
@@ -97,7 +100,7 @@ class add_new_steel(QtWidgets.QDialog):
     new_st_c = self.ui.c_in.text()
     self.steel_obj.ad_st_in_ob(new_st_name, new_st_sig, new_st_a, new_st_b, new_st_c)
     self.close()
-    print(self.steel_obj.obj_steels)
+    print(self.steel_obj.get_obj_steels())
 
 
 class steel_set(QtWidgets.QDialog):
@@ -118,7 +121,7 @@ class steel_set(QtWidgets.QDialog):
                                                                "BBLD (*.bbld)", options=options)
       if self.fileName:
         self.writeFile = open(self.fileName, 'w', encoding='utf-8')
-        self.writeFile.write(str(self.steel_obj.obj_steels))
+        self.writeFile.write(str(self.steel_obj.get_obj_steels()))
         self.writeFile.close()
         self.close()
     except FileNotFoundError:
@@ -152,7 +155,7 @@ class steel_set(QtWidgets.QDialog):
       f.write("")
       f.close()
       subprocess.call(['attrib', '+h', st_file_format])
-      self.steel_obj.obj_steels.clear()
+      self.steel_obj.clear_steel_set()
       QtWidgets.QMessageBox.information(self, "Сообщение", "Все вручную введенные стали были удалены!",
                                         QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
       self.close()
