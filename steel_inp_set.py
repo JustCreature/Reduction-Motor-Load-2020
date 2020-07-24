@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'steel_inp_set.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -14,6 +14,9 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(452, 123)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/images/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.load_list = QtWidgets.QPushButton(Dialog)
         self.load_list.setGeometry(QtCore.QRect(20, 50, 201, 23))
         self.load_list.setObjectName("load_list")
@@ -39,9 +42,10 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Настройки"))
+        Dialog.setWindowTitle(_translate("Dialog", "Настройки списка сталей"))
         self.load_list.setText(_translate("Dialog", "Загрузить список сталей из файла"))
         self.export_list.setText(_translate("Dialog", "Сохранить список сталей в файл"))
         self.set_cancel.setText(_translate("Dialog", "Отмена"))
         self.clear_list.setText(_translate("Dialog", "Очистить список сталей"))
-        self.label.setText(_translate("Dialog", "Выберите действие:"))
+        self.label.setText(_translate("Dialog", "Выберите действие"))
+import source_rc
